@@ -2,6 +2,12 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
+/*** cors START***/
+const cors = require('cors')
+
+app.use(cors())
+/*** cors END ***/
+
 // mongoose START
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost:27017/react-ajax')

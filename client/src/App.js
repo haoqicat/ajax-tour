@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled, { injectGlobal } from 'styled-components'
+import axios from 'axios'
 import poster from './poster.jpg'
 
 injectGlobal`
@@ -9,17 +10,19 @@ injectGlobal`
 `
 
 class App extends Component {
+  state = {
+    comments: []
+  }
+
+  componentDidMount = async () => {
+    const {
+      data: { comments }
+    } = await axios.get('http://localhost:3000/comments')
+    this.setState({ comments })
+  }
+
   render() {
-    const comments = [
-      {
-        _id: '1',
-        text: 'hello 1'
-      },
-      {
-        _id: '2',
-        text: 'hello 2'
-      }
-    ]
+    const { comments } = this.state
 
     const cmtList = comments.map(t => <Comment key={t._id}>{t.text}</Comment>)
     return (
