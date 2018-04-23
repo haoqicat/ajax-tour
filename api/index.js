@@ -24,11 +24,15 @@ app.post('/comment', async (req, res) => {
   try {
     const comment = new Comment(req.body)
     const cmt = await comment.save()
-    res.json({
-      comment: cmt
-    })
+    setTimeout(() => {
+      res.json({
+        comment: cmt
+      })
+    }, 2000)
   } catch (err) {
-    res.status(406).json({ msg: '提交失败' })
+    setTimeout(() => {
+      res.status(406).json({ msg: '提交失败' })
+    }, 2000)
   }
 })
 

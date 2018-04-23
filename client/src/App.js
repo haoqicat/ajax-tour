@@ -12,7 +12,8 @@ injectGlobal`
 class App extends Component {
   state = {
     comments: [],
-    text: ''
+    text: '',
+    isFetching: false
   }
 
   componentDidMount = async () => {
@@ -24,7 +25,13 @@ class App extends Component {
 
   handleClick = async () => {
     const { text } = this.state
+    this.setState({
+      isFetching: true
+    })
     const res = await axios.post('http://localhost:3000/comment', { text })
+    this.setState({
+      isFetching: false
+    })
     const { comment } = res.data
     this.setState({
       text: '',
@@ -39,8 +46,8 @@ class App extends Component {
   }
 
   render() {
-    const { comments } = this.state
-
+    const { comments, isFetching } = this.state
+    const btnText = isFetching ? '提交中...' : '提交'
     const cmtList = comments.map(t => <Comment key={t._id}>{t.text}</Comment>)
     return (
       <Wrap>
@@ -48,7 +55,9 @@ class App extends Component {
         <CommentList>{cmtList}</CommentList>
         <Input value={this.state.text} onChange={this.handleChange} />
         <ErrMsg>提交错误</ErrMsg>
-        <Button onClick={this.handleClick}>提交</Button>
+        <Button disabled={isFetching} onClick={this.handleClick}>
+          {btnText}
+        </Button>
       </Wrap>
     )
   }
@@ -100,6 +109,10 @@ const Button = styled.button`
   }
   &:hover {
     cursor: pointer;
+  }
+  &:disabled {
+    border: 2px solid lavender;
+    cursor: text;
   }
 `
 
