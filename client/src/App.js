@@ -11,7 +11,8 @@ injectGlobal`
 
 class App extends Component {
   state = {
-    comments: []
+    comments: [],
+    text: ''
   }
 
   componentDidMount = async () => {
@@ -19,6 +20,22 @@ class App extends Component {
       data: { comments }
     } = await axios.get('http://localhost:3000/comments')
     this.setState({ comments })
+  }
+
+  handleClick = async () => {
+    const { text } = this.state
+    const res = await axios.post('http://localhost:3000/comment', { text })
+    const { comment } = res.data
+    this.setState({
+      text: '',
+      comments: [...this.state.comments, comment]
+    })
+  }
+
+  handleChange = e => {
+    this.setState({
+      text: e.target.value
+    })
   }
 
   render() {
@@ -29,9 +46,9 @@ class App extends Component {
       <Wrap>
         <Img src={poster} />
         <CommentList>{cmtList}</CommentList>
-        <Input />
+        <Input value={this.state.text} onChange={this.handleChange} />
         <ErrMsg>提交错误</ErrMsg>
-        <Button>提交</Button>
+        <Button onClick={this.handleClick}>提交</Button>
       </Wrap>
     )
   }
